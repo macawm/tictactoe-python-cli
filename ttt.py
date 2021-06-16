@@ -14,20 +14,16 @@ def startGame():
 	winner = False
 	helpBoard = [1,2,3,4,5,6,7,8,9]
 	board = [' ',' ',' ',' ',' ',' ',' ',' ',' ']
-	turn = 0
 
 	currentMove = 0
 	printBoard(helpBoard, False, False, False)
 
 	while not winner and currentMove < maxMoves:
-		takeTurn(board, turn)
-		turn = updateTurn(turn)
+		takeTurn(board, currentMove)
 		currentMove += 1
 
 		xWin = checkForWin(board, XX)
-		#print("xWin %s" % xWin) #debug
 		oWin = checkForWin(board, OO)
-		#print("oWin %s" % oWin) #debug
 
 		winner = xWin or oWin
 		printBoard(board, xWin, oWin, not winner and currentMove == maxMoves)
@@ -35,7 +31,7 @@ def startGame():
 def takeTurn(board, turn):
 	square = -1
 	while (square == -1):
-		if (turn == 0):
+		if (turn % 2 == 0):
 			square = input(XX + " make your move. ")
 		else:
 			square = input(OO + " make your move. ")
@@ -56,13 +52,9 @@ def handleBadInput():
 	print("Bad selection. Try again.")
 	return -1
 
-def updateTurn(turn):
-	next = 1 if turn == 0 else 0
-	return next
-
 def updateBoard(board, s, turn):
 	global XX,OO
-	board[s] = XX if turn == 0 else OO
+	board[s] = XX if turn % 2 == 0 else OO
 
 def squareInRange(s):
 	return s >= 1 and s <= 9
