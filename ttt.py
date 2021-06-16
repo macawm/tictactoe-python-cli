@@ -12,11 +12,12 @@ def startGame():
 	maxMoves = 9
 
 	winner = False
-	board = [1,2,3,4,5,6,7,8,9]
+	helpBoard = [1,2,3,4,5,6,7,8,9]
+	board = [' ',' ',' ',' ',' ',' ',' ',' ',' ']
 	turn = 0
 
 	currentMove = 0
-	printBoard(board, False, False, False)
+	printBoard(helpBoard, False, False, False)
 
 	while not winner and currentMove < maxMoves:
 		takeTurn(board, turn)
