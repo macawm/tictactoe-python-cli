@@ -133,5 +133,23 @@ def main():
 	printIntro()
 	startGame()
 
+class GameBoard:
+	def __init__(self, size):
+		self.__size = size
+		self.__helpInfo = [i for i in range(size)]
+		self.__data = [' ' for i in range(size)]
+		self.__state = GameState.NOT_DONE
+
+class GameState:
+	NOT_DONE = -1
+	CAT = 0
+	X_WIN = 1
+	O_WIN = 2
+
+class GamePlayer:
+	def __init__(self, name, marker):
+		self.__name = name
+		self.__marker = marker
+
 if __name__ == '__main__':
 	main()
