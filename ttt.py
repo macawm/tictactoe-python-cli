@@ -1,17 +1,19 @@
 # Tic-Tac-Toe
 
+XX = "X"
+OO = "O"
+
 def printIntro():
 	print("Tic-Tac-Toe Game")
+	print("q to quit\n")
 
 def startGame():
+	global XX,OO
 	maxMoves = 9
 
 	winner = False
 	board = [1,2,3,4,5,6,7,8,9]
 	turn = 0
-
-	XX = "X"
-	OO = "O"
 
 	currentMove = 0
 	printBoard(board, False, False, False)
@@ -22,25 +24,27 @@ def startGame():
 		currentMove += 1
 
 		xWin = checkForWin(board, XX)
-		print("xWin %s" % xWin) #debug
-		yWin = checkForWin(board, YY)
-		print("yWin %s" % yWin) #debug
+		#print("xWin %s" % xWin) #debug
+		oWin = checkForWin(board, OO)
+		#print("oWin %s" % oWin) #debug
 
-		winner = xWin or yWin
-		printBoard(board, xWin, yWin, winner and currentMove >= maxMoves)
+		winner = xWin or oWin
+		printBoard(board, xWin, oWin, not winner and currentMove == maxMoves)
 
 def takeTurn(board, turn):
 	square = -1
 	while (square == -1):
 		if (turn == 0):
-			square = input("X make your move. ")
+			square = input(XX + " make your move. ")
 		else:
-			square = input("Y make your move. ")
+			square = input(OO + " make your move. ")
 		
 		if (square.isdigit()):
 			sInt = int(square)
-			if (not squareInRange(sInt) and not squareIsOpen(board, sInt)):
+			if (not squareInRange(sInt) or not squareIsOpen(board, sInt)):
 				square = handleBadInput()
+		elif (square == 'q'):
+			quit()
 		else:
 			square = handleBadInput()
 
@@ -56,13 +60,15 @@ def updateTurn(turn):
 	return next
 
 def updateBoard(board, s, turn):
-	board[s] = "X" if turn == 0 else "Y"
+	global XX,OO
+	board[s] = XX if turn == 0 else OO
 
 def squareInRange(s):
 	return s >= 1 and s <= 9
 
 def squareIsOpen(board, s):
-	return board[s-1] in range(0,9)
+	global XX,OO
+	return board[s-1] not in (XX,OO)
 
 def checkForWin(board, player):
 	bi = 0
@@ -91,7 +97,7 @@ def checkForWin(board, player):
 
 	return win
 
-def printBoard(board, xWin, yWin, gameDone):
+def printBoard(board, xWin, oWin, gameDone):
 	bi = 0
 	print(board[bi:bi+3])
 	bi += 3
@@ -100,7 +106,7 @@ def printBoard(board, xWin, yWin, gameDone):
 	print(board[bi:bi+3])
 	print("")
 
-	if (xWin or yWin):
+	if (xWin or oWin):
 		print("%s Win!!!" % ("Xs" if xWin else "Os"))
 	elif (gameDone):
 		print("Cat's game")
