@@ -28,10 +28,10 @@ def startGame():
 		winner = xWin or oWin
 		printBoard(board, xWin, oWin, not winner and currentMove == maxMoves)
 
-def takeTurn(board, turn):
+def takeTurn(board, move):
 	square = -1
 	while (square == -1):
-		if (turn % 2 == 0):
+		if (isXsTurn(move)):
 			square = input(XX + " make your move. ")
 		else:
 			square = input(OO + " make your move. ")
@@ -45,16 +45,19 @@ def takeTurn(board, turn):
 		else:
 			square = handleBadInput()
 
-	updateBoard(board, sInt-1, turn)
+	updateBoard(board, sInt-1, move)
 	return square
 
 def handleBadInput():
 	print("Bad selection. Try again.")
 	return -1
 
-def updateBoard(board, s, turn):
+def updateBoard(board, s, move):
 	global XX,OO
-	board[s] = XX if turn % 2 == 0 else OO
+	board[s] = XX if isXsTurn(move) else OO
+
+def isXsTurn(currentMove):
+	return currentMove %2 == 0
 
 def squareInRange(s):
 	return s >= 1 and s <= 9
