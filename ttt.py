@@ -67,21 +67,11 @@ def squareIsOpen(board, s):
 	return board[s-1] not in (XX,OO)
 
 def checkForWin(board, player):
-	bi = 0
-	#row 1
-	win = board[bi] == player and board[bi+1] == player and board[bi+2] == player
-	#col 1
-	win = win or (board[bi] == player and board[bi+3] == player and board[bi+6] == player)
-	bi = 1
-	#row 2
-	win = win or (board[bi*3] == player and board[bi*3+1] == player and board[bi*3+2] == player)
-	#col 2
-	win = win or (board[bi] == player and board[bi+3] == player and board[bi+6] == player)
-	bi = 2
-	#row 3
-	win = win or (board[bi*3] == player and board[bi*3+1] == player and board[bi*3+2] == player)
-	#col 3
-	win = win or (board[bi] == player and board[bi+3] == player and board[bi+6] == player)
+	win = False
+
+	for bi in range(3):
+		win = win or (board[bi*3] == player and board[bi*3+1] == player and board[bi*3+2] == player)
+		win = win or (board[bi] == player and board[bi+3] == player and board[bi+6] == player)
 
 	bi = 0
 	#diag l
