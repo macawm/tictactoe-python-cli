@@ -7,7 +7,7 @@ def printIntro():
 	print("Tic-Tac-Toe Game")
 	print("q to quit\n")
 
-def startGame():
+def startGame() -> None:
 	global XX,OO
 	maxMoves = 9
 
@@ -28,45 +28,55 @@ def startGame():
 		winner = xWin or oWin
 		printBoard(board, xWin, oWin, not winner and currentMove == maxMoves)
 
-def takeTurn(board, move):
-	square = -1
-	while (square == -1):
-		if (isXsTurn(move)):
-			square = input(XX + " make your move. ")
-		else:
-			square = input(OO + " make your move. ")
+def takeTurn(board: list, move: int) -> int:
+	newMark = getUserInput(board, move)
+	updateBoard(board, newMark, move)
+	return newMark
+
+def getUserInput(board: list, move: int) -> int:
+	badInput = True
+	while (badInput):
+		square = getPlayerInput(move)
 		
 		if (square.isdigit()):
 			sInt = int(square)
 			if (not squareInRange(sInt) or not squareIsOpen(board, sInt)):
 				square = handleBadInput()
+			else:
+				badInput = False
 		elif (square == 'q'):
 			quit()
 		else:
 			square = handleBadInput()
 
-	updateBoard(board, sInt-1, move)
-	return square
+	return sInt
 
-def handleBadInput():
+def getPlayerInput(move: int) -> str:
+	player = XX
+	if (not isXsTurn(move)):
+		player = OO
+
+	return input("%s make your move. " % player)
+
+def handleBadInput() -> bool:
 	print("Bad selection. Try again.")
-	return -1
+	return True
 
-def updateBoard(board, s, move):
+def updateBoard(board: list, s: int, move: int):
 	global XX,OO
-	board[s] = XX if isXsTurn(move) else OO
+	board[s-1] = XX if isXsTurn(move) else OO
 
-def isXsTurn(currentMove):
-	return currentMove %2 == 0
+def isXsTurn(currentMove: int) -> bool:
+	return currentMove % 2 == 0
 
-def squareInRange(s):
+def squareInRange(s: int) -> bool:
 	return s >= 1 and s <= 9
 
-def squareIsOpen(board, s):
+def squareIsOpen(board: list, s: int) -> bool:
 	global XX,OO
 	return board[s-1] not in (XX,OO)
 
-def checkForWin(board, player):
+def checkForWin(board: list, player: str) -> bool:
 	win = False
 
 	for bi in range(3):
@@ -77,13 +87,13 @@ def checkForWin(board, player):
 	#diag l
 	win = win or (board[bi] == player and board[bi+4] == player and board[bi+8] == player)
 	
-	bi = 2
+	bi = 8
 	#diag r
-	win = win or (board[bi] == player and board[bi+2] == player and board[bi+4] == player)
+	win = win or (board[bi] == player and board[bi-4] == player and board[bi-8] == player)
 
 	return win
 
-def printBoard(board, xWin, oWin, gameDone):
+def printBoard(board: list, xWin: bool, oWin: bool, gameDone: bool):
 	bi = 0
 	print("   %s|%s|%s" %(board[bi],board[bi+1],board[bi+2]))
 	print("   -----")
