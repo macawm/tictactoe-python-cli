@@ -1,34 +1,35 @@
 # Tic-Tac-Toe
 
-winner = -1
-board = [1,2,3,4,5,6,7,8,9]
-turn = 0
-maxMoves = 9
-XX = 0
-YY = 1
-
 def printIntro():
 	print("Tic-Tac-Toe Game")
 
 def startGame():
-	global winner
+	maxMoves = 9
+
+	winner = False
+	board = [1,2,3,4,5,6,7,8,9]
+	turn = 0
+
+	XX = "X"
+	OO = "O"
 
 	currentMove = 0
-	while winner == -1 and currentMove < maxMoves:
-		takeTurn()
+	printBoard(board, False, False, False)
+
+	while not winner and currentMove < maxMoves:
+		takeTurn(board, turn)
+		turn = updateTurn(turn)
 		currentMove += 1
 
-		xWin = checkForWin(XX)
+		xWin = checkForWin(board, XX)
 		print("xWin %s" % xWin) #debug
-		yWin = checkForWin(YY)
+		yWin = checkForWin(board, YY)
 		print("yWin %s" % yWin) #debug
 
 		winner = xWin or yWin
-		printBoard(xWin, yWin, winner and currentMove >= maxMoves)
+		printBoard(board, xWin, yWin, winner and currentMove >= maxMoves)
 
-def takeTurn():
-	global turn
-
+def takeTurn(board, turn):
 	square = -1
 	while (square == -1):
 		if (turn == 0):
@@ -36,25 +37,34 @@ def takeTurn():
 		else:
 			square = input("Y make your move. ")
 		
-		if (not squareInRange(square) and not squareIsOpen(square)):
-			print("Bad selection. Try again.")
-			square = -1
+		if (square.isdigit()):
+			sInt = int(square)
+			if (not squareInRange(sInt) and not squareIsOpen(board, sInt)):
+				square = handleBadInput()
+		else:
+			square = handleBadInput()
 
-	updateBoard(int(square))
-	turn = 1 if turn == 0 else 0
+	updateBoard(board, sInt-1, turn)
 	return square
 
+def handleBadInput():
+	print("Bad selection. Try again.")
+	return -1
 
-def updateBoard(s):
+def updateTurn(turn):
+	next = 1 if turn == 0 else 0
+	return next
+
+def updateBoard(board, s, turn):
 	board[s] = "X" if turn == 0 else "Y"
 
 def squareInRange(s):
-	return isinstance(s,str)
+	return s >= 1 and s <= 9
 
-def squareIsOpen(s):
-	return board[s] in range(0,9)
+def squareIsOpen(board, s):
+	return board[s-1] in range(0,9)
 
-def checkForWin(player):
+def checkForWin(board, player):
 	bi = 0
 	#row 1
 	win = board[bi] == player and board[bi+1] == player and board[bi+2] == player
@@ -81,7 +91,7 @@ def checkForWin(player):
 
 	return win
 
-def printBoard(xWin, yWin, gameDone):
+def printBoard(board, xWin, yWin, gameDone):
 	bi = 0
 	print(board[bi:bi+3])
 	bi += 3
@@ -91,7 +101,7 @@ def printBoard(xWin, yWin, gameDone):
 	print("")
 
 	if (xWin or yWin):
-		print("%s Wins!!!" % "Xs" if xWin else "Ys")
+		print("%s Win!!!" % ("Xs" if xWin else "Os"))
 	elif (gameDone):
 		print("Cat's game")
 
