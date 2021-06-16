@@ -99,12 +99,14 @@ def checkForWin(board, player):
 
 def printBoard(board, xWin, oWin, gameDone):
 	bi = 0
-	print(board[bi:bi+3])
+	print("   %s|%s|%s" %(board[bi],board[bi+1],board[bi+2]))
+	print("   -----")
 	bi += 3
-	print(board[bi:bi+3])
+	print("   %s|%s|%s" %(board[bi],board[bi+1],board[bi+2]))
+	print("   -----")
 	bi += 3
-	print(board[bi:bi+3])
-	print("")
+	print("   %s|%s|%s" %(board[bi],board[bi+1],board[bi+2]))
+	print()
 
 	if (xWin or oWin):
 		print("%s Win!!!" % ("Xs" if xWin else "Os"))
