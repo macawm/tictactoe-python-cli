@@ -51,7 +51,12 @@ def checkForWin(player):
 	return win
 
 def printBoard(xWin, yWin, gameDone):
-	print(board)
+	bi = 0
+	print(board[bi,bi+3])
+	bi = 1
+	print(board[bi,bi+3])
+	bi = 2
+	print(board[bi,bi+3])
 	if (xWin or yWin):
 		print()
 		printf("%s Wins!!!", "Xs" if xWin else "Ys")
