@@ -1,7 +1,7 @@
 # Tic-Tac-Toe
 
 winner = -1
-board = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
+board = [1,2,3,4,5,6,7,8,9]
 turn = 0
 maxMoves = 9
 XX = 0
@@ -53,9 +53,9 @@ def checkForWin(player):
 def printBoard(xWin, yWin, gameDone):
 	bi = 0
 	print(board[bi:bi+3])
-	bi = 1
+	bi = 3
 	print(board[bi:bi+3])
-	bi = 2
+	bi = 6
 	print(board[bi:bi+3])
 	print("")
 
