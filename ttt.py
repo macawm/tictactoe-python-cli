@@ -4,6 +4,8 @@ winner = -1
 board = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
 turn = 0
 maxMoves = 9
+XX = 0
+YY = 1
 
 def printIntro():
 	print("Tic-Tac-Toe Game")
@@ -12,18 +14,49 @@ def startGame():
 	currentMove = 0
 	while winner == -1 and currentMove < maxMoves:
 		takeTurn()
-		checkForWin()
-		printBoard()
 		currentMove += 1
+
+		xWin = checkForWin(XX)
+		yWin = checkForWin(YY)
+		printBoard(xWin, yWin, currentMove >= maxMoves)
 
 def takeTurn():
 	pass
 
-def checkForWin():
-	pass
+def checkForWin(player):
+	bi = 0
+	#row 1
+	win = board[bi] == player and board[bi+1] == player and board[bi+2] == player
+	#col 1
+	win = win or (board[bi] == player and board[bi+3] == player and board[bi+6] == player)
+	bi = 1
+	#row 2
+	win = win or (board[bi*3] == player and board[bi*3+1] == player and board[bi*3+2] == player)
+	#col 2
+	win = win or (board[bi] == player and board[bi+3] == player and board[bi+6] == player)
+	bi = 2
+	#row 3
+	win = win or (board[bi*3] == player and board[bi*3+1] == player and board[bi*3+2] == player)
+	#col 3
+	win = win or (board[bi] == player and board[bi+3] == player and board[bi+6] == player)
 
-def printBoard():
+	bi = 0
+	#diag l
+	win = win or (board[bi] == player and board[bi+4] == player and board[bi+8] == player)
+	
+	bi = 2
+	#diag r
+	win = win or (board[bi] == player and board[bi+2] == player and board[bi+4] == player)
+
+	return win
+
+def printBoard(xWin, yWin, gameDone):
 	print(board)
+	if (xWin or yWin):
+		print()
+		printf("%s Wins!!!", "Xs" if xWin else "Ys")
+	elif (gameDone):
+		print("Cat's game")
 
 def main():
 	printIntro()
