@@ -3,30 +3,48 @@
 XX = "X"
 OO = "O"
 
+GS_NOT_DONE = -1
+GS_CAT = 0
+GS_XWIN = 1
+GS_OWIN = 2
+
 def printIntro():
 	print("Tic-Tac-Toe Game")
 	print("q to quit\n")
 
+def signOff():
+	print("Thanks for playing.")
+
 def startGame() -> None:
 	global XX,OO
+	global GS_CAT,GS_OWIN,GS_XWIN,GS_NOT_DONE
+
 	maxMoves = 9
+	gameState = GS_NOT_DONE
 
 	winner = False
 	helpBoard = [1,2,3,4,5,6,7,8,9]
 	board = [' ',' ',' ',' ',' ',' ',' ',' ',' ']
 
 	currentMove = 0
-	printBoard(helpBoard, False, False, False)
+	printBoard(helpBoard, GS_NOT_DONE)
 
-	while not winner and currentMove < maxMoves:
+	while gameState == GS_NOT_DONE:
 		takeTurn(board, currentMove)
+
+		if (isXsTurn(currentMove)):
+			gameState = GS_XWIN if checkForWin(board, XX) else GS_NOT_DONE
+		else:
+			gameState = GS_OWIN if checkForWin(board, OO) else GS_NOT_DONE
+
 		currentMove += 1
 
-		xWin = checkForWin(board, XX)
-		oWin = checkForWin(board, OO)
+		if (currentMove == maxMoves and not (gameState == GS_XWIN or gameState == GS_OWIN)):
+			gameState = GS_CAT
 
-		winner = xWin or oWin
-		printBoard(board, xWin, oWin, not winner and currentMove == maxMoves)
+		printBoard(board, gameState)
+
+	signOff()
 
 def takeTurn(board: list, move: int) -> int:
 	newMark = getUserInput(board, move)
@@ -93,7 +111,9 @@ def checkForWin(board: list, player: str) -> bool:
 
 	return win
 
-def printBoard(board: list, xWin: bool, oWin: bool, gameDone: bool):
+def printBoard(board: list, gameState: int):
+	global GS_CAT,GS_OWIN,GS_XWIN
+
 	bi = 0
 	print("   %s|%s|%s" %(board[bi],board[bi+1],board[bi+2]))
 	print("   -----")
@@ -104,9 +124,9 @@ def printBoard(board: list, xWin: bool, oWin: bool, gameDone: bool):
 	print("   %s|%s|%s" %(board[bi],board[bi+1],board[bi+2]))
 	print()
 
-	if (xWin or oWin):
-		print("%s Win!!!" % ("Xs" if xWin else "Os"))
-	elif (gameDone):
+	if (gameState == GS_XWIN or gameState == GS_OWIN):
+		print("%s Win!!!" % ("Xs" if (gameState == GS_XWIN) else "Os"))
+	elif (gameState == GS_CAT):
 		print("Cat's game")
 
 def main():
