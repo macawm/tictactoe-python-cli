@@ -16,7 +16,7 @@ class GameState(IntEnum):
 
 class GameBoard:
 	def __init__(self, size: int):
-		self.size = 3  # TODO handle different size boards
+		self.size = size  # TODO handle different size boards
 		self.__helpInfo = [i for i in range(1, self.size**2 + 1)]
 		self.__data = [' ' for _ in range(self.size**2)]
 
@@ -46,7 +46,10 @@ class GameBoard:
 		return s_int in range(1, self.size**2 + 1)
 
 	def square_is_open(self, s_int: int) -> bool:
-		return self.__data[s_int - 1] not in ('X', 'O')
+		if self.square_in_range(s_int):
+			return self.mark_at_square(s_int) not in ('X', 'O')
+		else:
+			return False
 
 	def allowed_moves(self) -> int:
 		return self.size**2
@@ -68,8 +71,15 @@ class GameBoard:
 
 		return win
 
-	def update(self, new_mark: int, x_turn: bool) -> None:
-		self.__data[new_mark-1] = 'X' if x_turn else 'O'
+	def update(self, square: int, x_turn: bool) -> None:
+		""" This is the first, of only two, places where we alter the user input to correspond with our data store. """
+		if self.square_in_range(square):
+			self.__data[square - 1] = 'X' if x_turn else 'O'
+
+	def mark_at_square(self, square: int) -> str:
+		""" This is the second, of only two, places where we alter the user input to correspond with our data store. """
+		if self.square_in_range(square):
+			return self.__data[square-1]
 
 
 class GamePlayer:
@@ -128,7 +138,7 @@ class Game:
 
 			if square.isdigit():
 				s_int = int(square)
-				if not self.__board.square_in_range(s_int) or not self.__board.square_is_open(s_int):
+				if not self.__board.square_is_open(s_int):
 					print("Bad selection. Try again.")
 					bad_input = True
 				else:
