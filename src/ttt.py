@@ -62,9 +62,9 @@ class GameBoard:
 		# diag l
 		win = win or (self.__data[bi] == player and self.__data[bi+4] == player and self.__data[bi+8] == player)
 
-		bi = 8
+		bi = 2
 		# diag r
-		win = win or (self.__data[bi] == player and self.__data[bi-4] == player and self.__data[bi-8] == player)
+		win = win or (self.__data[bi] == player and self.__data[bi+2] == player and self.__data[bi+4] == player)
 
 		return win
 
