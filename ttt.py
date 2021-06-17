@@ -22,7 +22,6 @@ def startGame() -> None:
 	maxMoves = 9
 	gameState = GS_NOT_DONE
 
-	winner = False
 	helpBoard = [1,2,3,4,5,6,7,8,9]
 	board = [' ',' ',' ',' ',' ',' ',' ',' ',' ']
 
@@ -130,26 +129,69 @@ def printBoard(board: list, gameState: int):
 		print("Cat's game")
 
 def main():
-	printIntro()
-	startGame()
+	game = Game()
+	game.start()
 
-class GameBoard:
-	def __init__(self, size):
-		self.__size = size
-		self.__helpInfo = [i for i in range(size)]
-		self.__data = [' ' for i in range(size)]
-		self.__state = GameState.NOT_DONE
 
 class GameState:
+	def __init__(self):
+		pass
+
 	NOT_DONE = -1
 	CAT = 0
 	X_WIN = 1
 	O_WIN = 2
 
+
+class GameBoard:
+	def __init__(self, size: int):
+		self.size = size
+		self.__helpInfo = [i for i in range(1, size**2 + 1)]
+		self.__data = [' ' for _ in range(size**2)]
+
+	def print_help(self):
+		self.print_board(self.__helpInfo, GameState.NOT_DONE)
+
+	def print_board(self, board: list, state: GameState):
+		bi = 0
+		print("   %s|%s|%s" % (board[bi], board[bi+1], board[bi+2]))
+		print("   -----")
+		bi += 3
+		print("   %s|%s|%s" % (board[bi], board[bi+1], board[bi+2]))
+		print("   -----")
+		bi += 3
+		print("   %s|%s|%s" % (board[bi], board[bi+1], board[bi+2]))
+		print()
+
+		if state == GameState.X_WIN or state == GameState.O_WIN:
+			print("%s Win!!!" % ("Xs" if (state == GameState.X_WIN) else "Os"))
+		elif state == GameState.CAT:
+			print("Cat's game")
+
+
 class GamePlayer:
-	def __init__(self, name, marker):
+	def __init__(self, name: str, marker: str):
 		self.__name = name
 		self.__marker = marker
+
+
+class Game:
+	__state = None
+
+	def __init__(self):
+		self.__board = GameBoard(3)
+		self.__xPlayer = GamePlayer('Player 1', 'X')
+		self.__yPlayer = GamePlayer('Player 2', 'O')
+
+	def start(self):
+		self.print_intro()
+		self.__state = GameState.NOT_DONE
+
+	def print_intro(self):
+		print("Tic-Tac-Toe Game (%s x %s)" % (self.__board.size, self.__board.size))
+		print("q to quit\n")
+		self.__board.print_help()
+
 
 if __name__ == '__main__':
 	main()
