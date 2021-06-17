@@ -1,14 +1,13 @@
 # Tic-Tac-Toe
 
+from enum import IntEnum
+
+
 def main():
-	game = Game()
-	game.start()
+	Game().start()
 
 
-class GameState:
-	def __init__(self):
-		pass
-
+class GameState(IntEnum):
 	NOT_DONE = -1
 	CAT = 0
 	X_WIN = 1
@@ -17,24 +16,24 @@ class GameState:
 
 class GameBoard:
 	def __init__(self, size: int):
-		self.size = 3
+		self.size = 3  # TODO handle different size boards
 		self.__helpInfo = [i for i in range(1, self.size**2 + 1)]
 		self.__data = [' ' for _ in range(self.size**2)]
 
-	def print_help(self):
+	def print_help(self) -> None:
 		self.__print_board(self.__helpInfo, GameState.NOT_DONE)
 
-	def print_board(self, state: GameState):
+	def print_board(self, state: GameState) -> None:
 		self.__print_board(self.__data, state)
 
-	def __print_board(self, board: list, state: GameState):
+	def __print_board(self, board: list, state: GameState) -> None:
 		bi = 0
 		print("   %s|%s|%s" % tuple([board[i] for i in range(bi, bi + self.size)]))
 		print("   -----")
-		bi += 3
+		bi += self.size
 		print("   %s|%s|%s" % tuple([board[i] for i in range(bi, bi + self.size)]))
 		print("   -----")
-		bi += 3
+		bi += self.size
 		print("   %s|%s|%s" % tuple([board[i] for i in range(bi, bi + self.size)]))
 		print()
 
@@ -43,13 +42,13 @@ class GameBoard:
 		elif state == GameState.CAT:
 			print("Cat's game")
 
-	def square_in_range(self, s_int):
+	def square_in_range(self, s_int: int) -> bool:
 		return s_int in range(1, self.size**2 + 1)
 
-	def square_is_open(self, s_int):
+	def square_is_open(self, s_int: int) -> bool:
 		return self.__data[s_int - 1] not in ('X', 'O')
 
-	def allowed_moves(self):
+	def allowed_moves(self) -> int:
 		return self.size**2
 
 	def check_for_win(self, player: str) -> bool:
@@ -60,11 +59,11 @@ class GameBoard:
 			win = win or (self.__data[bi] == player and self.__data[bi+3] == player and self.__data[bi+6] == player)
 
 		bi = 0
-		#diag l
+		# diag l
 		win = win or (self.__data[bi] == player and self.__data[bi+4] == player and self.__data[bi+8] == player)
 
 		bi = 8
-		#diag r
+		# diag r
 		win = win or (self.__data[bi] == player and self.__data[bi-4] == player and self.__data[bi-8] == player)
 
 		return win
@@ -104,7 +103,7 @@ class Game:
 
 			self.__move += 1
 
-			if self.reached_max_moves() and not (self.xWon() or self.oWon()):
+			if self.reached_max_moves() and not (self.x_won() or self.o_won()):
 				self.__state = GameState.CAT
 
 			self.__board.print_board(self.__state)
@@ -130,13 +129,15 @@ class Game:
 			if square.isdigit():
 				s_int = int(square)
 				if not self.__board.square_in_range(s_int) or not self.__board.square_is_open(s_int):
-					bad_input = self.handle_bad_input()
+					print("Bad selection. Try again.")
+					bad_input = True
 				else:
 					bad_input = False
 			elif square == 'q':
 				quit()
 			else:
-				bad_input = self.handle_bad_input()
+				print("Bad selection. Try again.")
+				bad_input = True
 
 		return s_int
 
@@ -150,17 +151,13 @@ class Game:
 	def is_x_turn(self) -> bool:
 		return self.__move % 2 == 0
 
-	def handle_bad_input(self) -> None:
-		print("Bad selection. Try again.")
-		return True
-
 	def reached_max_moves(self) -> bool:
 		return self.__move == self.__board.allowed_moves()
 
-	def xWon(self) -> bool:
+	def x_won(self) -> bool:
 		return self.__state == GameState.X_WIN
 
-	def oWon(self) -> bool:
+	def o_won(self) -> bool:
 		return self.__state == GameState.O_WIN
 
 
