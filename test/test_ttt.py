@@ -102,8 +102,8 @@ class TestGame(unittest.TestCase):
         self.p2 = ttt.GamePlayer('Player 2', 'O')
         self.game = ttt.Game(self.p1, self.p2)
 
-    def test_findWinner(self):
-        self.assertFalse(self.game.has_winner())
+    def test_gameWon(self):
+        self.assertFalse(self.game.game_won())
 
         # mock out user input
         with patch.object(ttt.Game, 'get_user_input') as mocked_input:
@@ -122,16 +122,7 @@ class TestGame(unittest.TestCase):
             mocked_input.return_value = 7
             self.game.take_turn()
 
-            self.assertTrue(self.game.has_winner())
-
-    def test_hasWinner(self):
-        self.assertFalse(self.game.has_winner())
-
-    def test_takeTurn(self):
-        pass
-
-    def test_getUserInput(self):
-        pass
+            self.assertTrue(self.game.game_won())
 
     def test_getCurrentPlayer(self):
         self.assertEqual(self.p1, self.game.get_current_player())
@@ -145,12 +136,6 @@ class TestGame(unittest.TestCase):
 
             self.game.take_turn()
             self.assertEqual(self.p1, self.game.get_current_player())
-
-    def test_reachedMaxMoves(self):
-        pass
-
-    def test_gameWon(self):
-        pass
 
 
 if __name__ == '__main__':

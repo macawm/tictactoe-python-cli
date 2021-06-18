@@ -108,7 +108,7 @@ class Game:
         while self.__game_not_over():
             self.take_turn()
 
-            if self.reached_max_moves() and not self.has_winner():
+            if self.__reached_max_moves() and not self.__has_winner():
                 self.__state = GameState.CAT
 
             self.__board.print_board()
@@ -122,10 +122,10 @@ class Game:
 
     def __find_winner(self) -> None:
         self.__winner = self.__board.get_winner(self.get_current_player())
-        if self.has_winner():
+        if self.__has_winner():
             self.__state = GameState.GAME_WON
 
-    def has_winner(self) -> bool:
+    def __has_winner(self) -> bool:
         return self.__winner is not None
 
     def __print_intro(self) -> None:
@@ -146,7 +146,7 @@ class Game:
     def get_user_input(self) -> int:
         bad_input = True
         while bad_input:
-            square = self.__get_raw_input()
+            square = input("%s make your move. " % self.get_current_player().name)
 
             if square.isdigit():
                 s_int = int(square)
@@ -163,13 +163,10 @@ class Game:
 
         return s_int
 
-    def __get_raw_input(self) -> str:
-        return input("%s make your move. " % self.get_current_player().name)
-
     def get_current_player(self) -> GamePlayer:
         return self.__xPlayer if self.__move % 2 == 0 else self.__oPlayer
 
-    def reached_max_moves(self) -> bool:
+    def __reached_max_moves(self) -> bool:
         return self.__move == self.__board.allowed_moves()
 
     def game_won(self) -> bool:
