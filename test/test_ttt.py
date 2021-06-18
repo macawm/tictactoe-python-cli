@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 import ttt
 
 
@@ -97,7 +98,59 @@ class TestGamePlayer(unittest.TestCase):
 
 class TestGame(unittest.TestCase):
     def setUp(self) -> None:
-        self.game = ttt.Game()
+        self.p1 = ttt.GamePlayer('Player 1', 'X')
+        self.p2 = ttt.GamePlayer('Player 2', 'O')
+        self.game = ttt.Game(self.p1, self.p2)
+
+    def test_findWinner(self):
+        self.assertFalse(self.game.has_winner())
+
+        # mock out user input
+        with patch.object(ttt.Game, 'get_user_input') as mocked_input:
+            mocked_input.return_value = 1
+            self.game.take_turn()
+
+            mocked_input.return_value = 2
+            self.game.take_turn()
+
+            mocked_input.return_value = 4
+            self.game.take_turn()
+
+            mocked_input.return_value = 3
+            self.game.take_turn()
+
+            mocked_input.return_value = 7
+            self.game.take_turn()
+
+            self.assertTrue(self.game.has_winner())
+
+    def test_hasWinner(self):
+        self.assertFalse(self.game.has_winner())
+
+    def test_takeTurn(self):
+        pass
+
+    def test_getUserInput(self):
+        pass
+
+    def test_getCurrentPlayer(self):
+        self.assertEqual(self.p1, self.game.get_current_player())
+
+        # mock out user input
+        with patch.object(ttt.Game, 'get_user_input') as mocked_input:
+            mocked_input.return_value = 1
+
+            self.game.take_turn()
+            self.assertEqual(self.p2, self.game.get_current_player())
+
+            self.game.take_turn()
+            self.assertEqual(self.p1, self.game.get_current_player())
+
+    def test_reachedMaxMoves(self):
+        pass
+
+    def test_gameWon(self):
+        pass
 
 
 if __name__ == '__main__':

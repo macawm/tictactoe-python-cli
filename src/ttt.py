@@ -4,7 +4,7 @@ from enum import IntEnum
 
 
 def main():
-    Game().start()
+    Game(GamePlayer('Player 1', 'X'), GamePlayer('Player 2', 'O')).start()
 
 
 class GameState(IntEnum):
@@ -91,22 +91,22 @@ class Game:
     __state = None
     __move = None
 
-    def __init__(self):
+    def __init__(self, p1: GamePlayer, p2: GamePlayer):
         self.__winner = None
-        self.__xPlayer = GamePlayer('Player 1', 'X')
-        self.__oPlayer = GamePlayer('Player 2', 'O')
+        self.__move = 0
+        self.__state = GameState.NOT_DONE
+
+        self.__xPlayer = p1
+        self.__oPlayer = p2
         self.__firstPlayer = self.__xPlayer
+
         self.__board = GameBoard(3, self.__xPlayer, self.__oPlayer)
 
     def start(self):
         self.__print_intro()
-        self.__state = GameState.NOT_DONE
 
-        self.__move = 0
-
-        while self.game_not_over():
+        while self.__game_not_over():
             self.take_turn()
-            self.find_winner()
 
             if self.reached_max_moves() and not self.has_winner():
                 self.__state = GameState.CAT
@@ -120,7 +120,7 @@ class Game:
         elif self.__state == GameState.CAT:
             print("Cat's game")
 
-    def find_winner(self) -> None:
+    def __find_winner(self) -> None:
         self.__winner = self.__board.get_winner(self.get_current_player())
         if self.has_winner():
             self.__state = GameState.GAME_WON
@@ -133,12 +133,14 @@ class Game:
         print("q to quit\n")
         self.__board.print_help()
 
-    def game_not_over(self) -> bool:
+    def __game_not_over(self) -> bool:
         return self.__state == GameState.NOT_DONE
 
     def take_turn(self) -> None:
         new_mark = self.get_user_input()
         self.__board.update(new_mark, self.get_current_player())
+
+        self.__find_winner()
         self.__move += 1
 
     def get_user_input(self) -> int:
