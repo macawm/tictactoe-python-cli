@@ -35,14 +35,13 @@ class GameBoard:
         self.__print_board(self.__data)
 
     def __print_board(self, board: list) -> None:
-        bi = 0
-        print("   %s|%s|%s" % tuple([board[i] for i in range(bi, bi + self.size)]))
-        print("   -----")
-        bi += self.size
-        print("   %s|%s|%s" % tuple([board[i] for i in range(bi, bi + self.size)]))
-        print("   -----")
-        bi += self.size
-        print("   %s|%s|%s" % tuple([board[i] for i in range(bi, bi + self.size)]))
+        inset = '   '
+        for row in range(self.size):
+            r_c = row * self.size
+            row_str = ''.join(('%%s%s' % ('\u2502' if x != self.size-1 else '')) for x in range(self.size))
+            print(inset + row_str % tuple([board[i] for i in range(r_c, r_c + self.size)]))
+            if row != self.size - 1:
+                print(inset + "\u2500\u253c\u2500\u253c\u2500")
         print()
 
     def square_in_range(self, s_int: int) -> bool:
